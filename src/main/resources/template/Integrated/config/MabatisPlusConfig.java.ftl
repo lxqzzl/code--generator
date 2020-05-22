@@ -1,0 +1,29 @@
+package ${packageName}.config;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+
+/**
+ * @Description mybatis plus配置类
+ * @author ${author}
+ * @since ${date}
+ */
+ 
+@EnableTransactionManagement
+@Configuration
+@MapperScan("${packageName}.dao")
+public class MybatisPlusConfig {
+    /**
+     * 分页插件，自动识别数据库类型
+     */
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+        PaginationInterceptor page = new PaginationInterceptor();
+        page.setDialectType("mysql");
+        return page;
+    }
+}
