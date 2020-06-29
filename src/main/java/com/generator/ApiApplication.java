@@ -1,4 +1,4 @@
-package com.create.code;
+package com.generator;
 
 import java.io.IOException;
 import java.util.Date;
