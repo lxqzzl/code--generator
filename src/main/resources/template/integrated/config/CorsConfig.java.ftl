@@ -1,4 +1,4 @@
-package ${packageName}.web;
+package ${packageName}.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

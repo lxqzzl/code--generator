@@ -1,4 +1,4 @@
-package ${packageName}.web;
+package ${packageName}.config;
 
 import javax.servlet.Filter;
 
@@ -50,8 +50,8 @@ public class ShiroConfig {
 	 */
 	@Bean
     public SessionManager sessionManager(){  
-		MySessionManager mySessionManager=new MySessionManager();
-	    return mySessionManager;
+		CustomSessionManager customSessionManager=new CustomSessionManager();
+	    return customSessionManager;
     }
 
 

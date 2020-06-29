@@ -24,5 +24,15 @@ public class GlobalResult {
 	 */ 
     private Object data;
 
-
+    /**
+              * 构造错误返回信息
+     * @param status
+     * @param msg
+     * @param data
+     */
+    public GlobalResult(Integer status, String msg, Object data) {
+		this.status=status;
+		this.msg=msg;
+		this.data=data;
+	}
 }
