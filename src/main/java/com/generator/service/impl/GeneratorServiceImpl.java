@@ -1,4 +1,4 @@
-package com.generatorservice.impl;
+package com.generator.service.impl;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -9,6 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -24,12 +27,14 @@ import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.generator.manager.ManagerUtil;
-import com.generatorservice.GeneratorService;
+import com.generator.service.GeneratorService;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
+@Service
+@Component("GeneratorService")
 public class GeneratorServiceImpl implements GeneratorService {
 	/**
 	 * 数据库字段类型：tinyint
@@ -50,6 +55,8 @@ public class GeneratorServiceImpl implements GeneratorService {
 	
 	@Override
 	public void generatorStart() {	
+//		mainCodeGenertor(dataBaseModel, tableNames, pre, packageName, projectPath, templatePath);
+//		otherCodeGenertor(fileNames, dataModel, basePath, targetPath);
 
 	}
 
@@ -166,14 +173,12 @@ public class GeneratorServiceImpl implements GeneratorService {
 		// 循环遍历文件夹中的所用文件
 		for (String fileName : fileNames) {
 			// 加载一个模板，创建一个模板对象。
-			System.out.println("正在生成" + fileName + "下的");
 			Template template1 = configuration.getTemplate(fileName);
 			// 创建一个Writer对象，一般创建一FileWriter对象，指定生成的文件名
 			Writer out = new FileWriter(new File(targetPath+ "/src/main/java"+ ManagerUtil.getPackagePath(dataModel.get("packageName")) + "/" + basePath.substring(basePath.lastIndexOf("\\") + 1)
 					+ "/" + fileName.substring(0, fileName.length() - 4)));
 			// 调用模板对象的process方法输出文件。
 			template1.process(dataModel, out);
-			System.out.println("生成" + fileName + "结束");
 			// 第八步：关闭流。
 			out.close();
 		}

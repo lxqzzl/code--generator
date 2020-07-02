@@ -1,5 +1,6 @@
 package ${cfg.packageName}.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import ${cfg.packageName}.service.${table.serviceName};
@@ -45,10 +47,12 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(tags = "${table.name}表操作API")	
 public class ${table.controllerName} {
     private Logger logger = LoggerFactory.getLogger(${table.controllerName}.class);
-    @Autowired
-    @Qualifier("${table.serviceName}")
-    private ${table.serviceName} ${table.serviceName?uncap_first} = new ${table.serviceName}Impl();	
-	
+    
+    private ${table.serviceName} ${table.serviceName?uncap_first};	
+	@Autowired
+    public ${table.controllerName}(@Qualifier("${table.serviceName}")${table.serviceName} ${table.serviceName?uncap_first}) {
+		this.${table.serviceName?uncap_first}=${table.serviceName?uncap_first;
+	}	
 	/**
 	 * 获取满足某些条件的全部数据列表 
 	 * @param fieldValue 查询条件值
@@ -60,19 +64,19 @@ public class ${table.controllerName} {
 	@GetMapping("/")
 	@RequiresPermissions({ "${entity?replace("DO","")?lower_case}-r" })
 	@ApiOperation(value = "获取满足某些条件的全部数据列", httpMethod = "GET", notes = "用于通过指定条件,查询${table.name}表对应所用数据")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "page", value = "请求页码", paramType = "query", dataType = "String"),
-			@ApiImplicitParam(name = "limit", value = "每页数据条数", paramType = "query", dataType = "String"), 
-			@ApiImplicitParam(name = "fieldValue", value = "查询条件值", paramType = "query", dataType = "String"),
-			@ApiImplicitParam(name = "fieldName", value = "查询条件值属性名", paramType = "query", dataType = "String")})
+	@ApiImplicitParams({ @ApiImplicitParam(name = "fieldMapData", value = "查询条件", paramType = "query", dataType = "String"),
+			@ApiImplicitParam(name = "currentPage", value = "请求页", paramType = "query", dataType = "String"), 
+			@ApiImplicitParam(name = "pageSize", value = "请求页大小", paramType = "query", dataType = "String")})
 	@ApiResponses({ @ApiResponse(code = 551, message = "第三方平台错误"), @ApiResponse(code = 552, message = "本平台错误"),
 			@ApiResponse(code = 553, message = "权限不够"), @ApiResponse(code = 554, message = "请求数据有误"),
 			@ApiResponse(code = 555, message = "请求超时，请重试") })
-	public List<${entity}> list${entity?replace("DO","")}ByOther(@RequestParam(value = "page", required = false) String page,
-			@RequestParam(value = "limit", required = false) String limit,
-			@RequestParam(value = "fieldValue", required = false) String fieldValue,
-			@RequestParam(value = "fieldName", required = false) String fieldName) {
-		logger.info("receive:[page:"+page+"--limit:"+limit+"--fieldValue:"+fieldValue+"--fieldName:"+fieldName+"]");
-		List<${entity}> ${table.entityPath?replace("DO","")}s = ${table.serviceName?uncap_first}.list${entity?replace("DO","")}ByOther(fieldValue, fieldName, page, limit);
+	public List<${entity}> list${entity?replace("DO","")}ByOther(@RequestParam(value = "fieldMapData", required = false) String fieldMapData,
+			@RequestParam(value = "currentPage", required = false) String currentPage,
+			@RequestParam(value = "pageSize", required = false) String pageSize) {
+		logger.info("receive:[fieldMapData:"+fieldMapData+"--currentPage:"+currentPage+"--pageSize:"+pageSize+"];");
+		@SuppressWarnings("unchecked")
+		HashMap<String,Object> fieldMap = JSON.parseObject(fieldMapData, HashMap.class);
+		List<${entity}> ${table.entityPath?replace("DO","")}s = ${table.serviceName?uncap_first}.list${entity?replace("DO","")}ByOther(fieldMap, currentPage, pageSize);
 		return ${table.entityPath?replace("DO","")}s;
 	}
 	
@@ -104,16 +108,16 @@ public class ${table.controllerName} {
 	@ApiIgnore
 	@ApiOperation(value = "根据其他查找数据", httpMethod = "GET", notes = "用于通过指定字段，查询uuuec_user表中对应的一条数据")
 	@ApiImplicitParams({
-	@ApiImplicitParam(name = "fieldValue", value = "查询条件值", paramType = "query", dataType = "String"),
-	@ApiImplicitParam(name = "fieldName", value = "查询条件值属性名", paramType = "query", dataType = "String")
+	@ApiImplicitParam(name = "fieldMapData", value = "查询条件", paramType = "query", dataType = "String")
 	})
 	@ApiResponses({ @ApiResponse(code = 551, message = "第三方平台错误"), @ApiResponse(code = 552, message = "本平台错误"),
 			@ApiResponse(code = 553, message = "权限不够"), @ApiResponse(code = 554, message = "请求数据有误"),
 			@ApiResponse(code = 555, message = "请求超时，请重试") })
-	public ${entity} get${entity?replace("DO","")}ByOther(@RequestParam(value = "fieldValue", required = false) String fieldValue
-			,@RequestParam(value = "fieldName", required = false) String fieldName) {
-		logger.info("receive:[fieldValue:"+fieldValue+"--fieldName:"+fieldName+"]");
-		${entity} ${table.entityPath} = ${table.serviceName?uncap_first}.get${entity?replace("DO","")}ByOther(fieldValue,fieldName);
+	public ${entity} get${entity?replace("DO","")}ByOther(@RequestParam(value = "fieldMapData", required = false) String fieldMapData) {
+		logger.info("receive:[fieldMapData:"+fieldMapData+"]");
+		@SuppressWarnings("unchecked")
+		HashMap<String,Object> fieldMap = JSON.parseObject(fieldMapData, HashMap.class);
+		${entity} ${table.entityPath} = ${table.serviceName?uncap_first}.get${entity?replace("DO","")}ByOther(fieldMap);
 		return ${table.entityPath};
 	}
 	
@@ -206,7 +210,6 @@ public class ${table.controllerName} {
 			@RequestBody(required=false) String data) {
 		logger.info("receive:[${table.entityPath?replace("DO","")}Id:"+${table.entityPath?replace("DO","")}Id+"--data:"+data+"]");		    					
 		${entity} ${table.entityPath} = ${table.serviceName?uncap_first}.update${entity?replace("DO","")}Field(data, Long.valueOf(${table.entityPath?replace("DO","")}Id));
-        ${table.entityPath}.set${entity?replace("DO","")}Id(Long.valueOf(${table.entityPath?replace("DO","")}Id));
         return ${table.entityPath};
      }
 	
@@ -225,7 +228,7 @@ public class ${table.controllerName} {
 	public Boolean delete${entity}ById(@ApiParam(value = "${table.entityPath?replace("DO","")}IdListString", required = true)@PathVariable("${table.entityPath?replace("DO","")}Id")String ${table.entityPath?replace("DO","")}Id) {		
 		Boolean flag = null;
 		logger.info("receive:[${table.entityPath?replace("DO","")}Id:"+${table.entityPath?replace("DO","")}Id+"]");
-		flag = ${table.serviceName?uncap_first}.delete${entity?replace("DO","")}ById(${table.entityPath?replace("DO","")}Id);
+		flag = ${table.serviceName?uncap_first}.delete${entity?replace("DO","")}ById(Long.valueOf(${table.entityPath?replace("DO","")}Id));
 		return flag;		
 	}	
 }

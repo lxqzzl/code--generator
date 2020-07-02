@@ -1,6 +1,8 @@
 package ${cfg.packageName}.service;
 
 import ${cfg.packageName}.entity.${entity};
+
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ public interface ${table.serviceName} {
 	 * @param limit 每页限制条数
      * @return Page<${entity}>
 	 */
-	List<${entity}> list${entity?replace("DO","")}ByOther(String fieldValue, String fieldName, String page, String limit);
+	List<${entity}> list${entity?replace("DO","")}ByOther(HashMap<String,Object> fieldMap, String currentPage, String pageSize);
 	
 	/**
 	  * 根据Id查询数据
@@ -33,7 +35,7 @@ public interface ${table.serviceName} {
 	 * @param fieldName 查询条件值属性名
      * @return ${entity}
 	 */
-	${entity} get${entity?replace("DO","")}ByOther(String fieldValue, String fieldName);
+	${entity} get${entity?replace("DO","")}ByOther(HashMap<String,Object> fieldMap);
 	
 	/**
 	 * 插入新的数据
@@ -62,5 +64,5 @@ public interface ${table.serviceName} {
 	 * @param ${table.entityPath?replace("DO","")}Id ${table.entityPath?replace("DO","")}Id
      * @return String
 	 */
-	Boolean delete${entity?replace("DO","")}ById(String ${table.entityPath?replace("DO","")}Id);	
+	Boolean delete${entity?replace("DO","")}ById(Long ${table.entityPath?replace("DO","")}Id);	
 }

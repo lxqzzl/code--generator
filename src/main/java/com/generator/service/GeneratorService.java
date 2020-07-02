@@ -1,4 +1,4 @@
-package com.generatorservice;
+package com.generator.service;
 
 import java.io.IOException;
 import java.util.List;
