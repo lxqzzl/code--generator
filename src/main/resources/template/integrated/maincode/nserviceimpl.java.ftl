@@ -84,7 +84,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 	logger.info("receive:[${table.entityPath?replace("DO","")}Id:"+${table.entityPath?replace("DO","")}Id+"];");
 	    //通过selectById()方法根据Id查询对应的数据
 		${entity} ${table.entityPath}=this.${table.entityPath?replace("DO","")}Mapper.selectById(${table.entityPath?replace("DO","")}Id);		
-		logger.info("return:" + genDO);
+		logger.info("return:" + ${table.entityPath});
 		return ${table.entityPath};
 	}
 	

@@ -39,7 +39,7 @@ public class GeneratorController {
     	dataBaseModel.put("username", "root");
     	dataBaseModel.put("password", "123456");
     	
-    	String[] tableNames = new String[] {"gen"};
+    	String[] tableNames = new String[] {"gen","sys_user"};
     	
     	generatorService.mainCodeGenertor(dataBaseModel, tableNames, "", dataModel.get("packageName"), "D:\\WorkSpace\\fireweb\\gtest", "template/integrated/maincode/");
     	

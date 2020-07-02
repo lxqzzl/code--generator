@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import ${packageName}.web.GateWayHandlerInterceptor;
 /**
  * @Description web网关配置类
  * @author ${author}
@@ -30,6 +31,6 @@ public class CorsConfig implements WebMvcConfigurer {
     
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(gatewayHandlerInterceptor)
+        registry.addInterceptor(gatewayHandlerInterceptor);
     }
 }

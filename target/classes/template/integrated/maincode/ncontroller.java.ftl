@@ -24,7 +24,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import ${cfg.packageName}.service.${table.serviceName};
-import ${cfg.packageName}.service.impl.${table.serviceName}Impl;
 import ${cfg.packageName}.entity.${entity};
 
 import io.swagger.annotations.Api;
@@ -51,7 +50,7 @@ public class ${table.controllerName} {
     private ${table.serviceName} ${table.serviceName?uncap_first};	
 	@Autowired
     public ${table.controllerName}(@Qualifier("${table.serviceName}")${table.serviceName} ${table.serviceName?uncap_first}) {
-		this.${table.serviceName?uncap_first}=${table.serviceName?uncap_first;
+		this.${table.serviceName?uncap_first}=${table.serviceName?uncap_first};
 	}	
 	/**
 	 * 获取满足某些条件的全部数据列表 
@@ -113,7 +112,7 @@ public class ${table.controllerName} {
 	@ApiResponses({ @ApiResponse(code = 551, message = "第三方平台错误"), @ApiResponse(code = 552, message = "本平台错误"),
 			@ApiResponse(code = 553, message = "权限不够"), @ApiResponse(code = 554, message = "请求数据有误"),
 			@ApiResponse(code = 555, message = "请求超时，请重试") })
-	public ${entity} get${entity?replace("DO","")}ByOther(@RequestParam(value = "fieldMapData", required = false) String fieldMapData) {
+	public ${entity} get${entity?replace("DO","")}ByOther(@RequestParam(value = "fieldMapData", required = true) String fieldMapData) {
 		logger.info("receive:[fieldMapData:"+fieldMapData+"]");
 		@SuppressWarnings("unchecked")
 		HashMap<String,Object> fieldMap = JSON.parseObject(fieldMapData, HashMap.class);

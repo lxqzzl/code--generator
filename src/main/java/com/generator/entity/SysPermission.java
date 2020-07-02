@@ -11,12 +11,17 @@ import com.gitee.sunchenbin.mybatis.actable.annotation.Table;
 
 import lombok.Data;
 
+/**
+ * @Description sys_permission表字段
+ * @author lxq
+ * @since 2020-07-02 18:16:46
+ */
 @Data
 //对应数据库表名，如果更改表名需要同步更改数据库表名，不然会重新创建表
 @Table(name = "sys_permission")
 public class SysPermission {
 	/**
-	 * 主键
+	 * 权限表主键id
 	 */
 	// mybatis-plus主键注解
 	@TableId(type = IdType.AUTO)
@@ -28,13 +33,13 @@ public class SysPermission {
 	@Column(name = "permission_Id", comment = "权限表主键id", type = "bigint")
 	private Long permissionId;
 	/**
-	 * 创建时间
+	 * 创建时间，格式为YY-MM-DD hh:mm:s
 	 */
 	// name指定数据库字段名，comment为备注
 	@Column(name = "gmt_create", comment = "创建时间，格式为YY-MM-DD hh:mm:ss", type = "datetime")
 	private Date gmtCreate;
 	/**
-	 * 最后修改时间
+	 * 创建时间，格式为YY-MM-DD hh:mm:s
 	 */
 	@Column(name = "gmt_modified", comment = "最后修改时间，格式为YY-MM-DD hh:mm:ss", type = "datetime")
 	private Date gmtModified;

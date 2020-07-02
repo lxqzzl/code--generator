@@ -1,26 +1,31 @@
 package ${packageName}.web;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 
-import ${packageName}.entity.UserDO;
-import ${packageName}.service.UserService;
-import ${packageName}.service.impl.UserServiceImpl;
+import ${packageName}.entity.SysUserDO;
+import ${packageName}.service.SysUserService;
 
 @Component
 public class GateWayHandlerInterceptor implements HandlerInterceptor {
+	private SysUserService sysUserService;
 	@Autowired
-	private UserService userService = new UserServiceImpl();
+	public GateWayHandlerInterceptor(@Qualifier("SysUserService")SysUserService sysUserService) {
+		this.sysUserService=sysUserService;
+	}
+	private HashMap<String,Object> fieldMap = new HashMap<String, Object>();
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
@@ -40,7 +45,7 @@ public class GateWayHandlerInterceptor implements HandlerInterceptor {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json; charset=utf-8");
 		String timeStamp = request.getHeader("TimeStamp");
-		String APIToken = request.getHeader("APIToken");
+		String UserToken = request.getHeader("UserToken");
 		String signature = request.getHeader("Signature");
 		if (request.getMethod().equals("OPTIONS")) {
 			flag = true;
@@ -48,10 +53,11 @@ public class GateWayHandlerInterceptor implements HandlerInterceptor {
 			try {
 				long s = (System.currentTimeMillis() - Long.valueOf(timeStamp)) / (1000 * 60);
 				if (s < 1 && s >= 0) {
-					UserDO userDO = userService.getUserByOther(APIToken,"userToken");
-					if (userDO != null) {
-						String secretKey = userDO.getUserSecretkey();
-						if (signature.equals(DigestUtils.md5Hex(APIToken + timeStamp + secretKey))) {
+					fieldMap.put("userToken", UserToken);
+					SysUserDO sysUserDO = sysUserService.getSysUserByOther(fieldMap);
+					if (sysUserDO != null) {
+						String secretKey = sysUserDO.getUserSecretKey();
+						if (signature.equals(DigestUtils.md5Hex(UserToken + timeStamp + secretKey))) {
 							flag = true;
 						} else {
 							JSONObject result = new JSONObject();
