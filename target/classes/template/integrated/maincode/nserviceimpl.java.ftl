@@ -56,7 +56,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 	public List<${entity}> list${entity?replace("DO","")}ByOther(HashMap<String,Object> fieldMap, String currentPage, String pageSize) {
 		logger.info("receive:[fieldMap:" + fieldMap + "--page:" + currentPage + "--limit:"+ pageSize + "];");
 		//构造查询条件
-		QueryWrapper<${entity}> queryWrapper = QueryUtilManger.getEqQuery(fieldMap);
+		QueryWrapper<${entity}> queryWrapper = QueryUtilManger.getEqQuery(new ${entity}(), fieldMap);
 		//存放返回的数据
 		List<${entity}> ${table.entityPath}s = new ArrayList<${entity}>();
 		//判断是否请求分页查询
@@ -97,7 +97,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 	public ${entity} get${entity?replace("DO","")}ByOther(HashMap<String,Object> fieldMap) {
 		logger.info("receive:[fieldMap:" + fieldMap + "];");
 		//构造查询条件
-		QueryWrapper<${entity}> queryWrapper = QueryUtilManger.getEqQuery(fieldMap);
+		QueryWrapper<${entity}> queryWrapper = QueryUtilManger.getEqQuery(new ${entity}(), fieldMap);
 		//使用selectOne()方法根据条件查询对应数据
 		${entity} ${table.entityPath} = this.${table.entityPath?replace("DO","")}Mapper.selectOne(queryWrapper);
 		logger.info("Intermediate variable:[queryWrapper:" + queryWrapper + "];");

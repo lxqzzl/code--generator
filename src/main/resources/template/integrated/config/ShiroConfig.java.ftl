@@ -7,27 +7,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import ${packageName}.web.ClientRealm;
+import ${packageName}.manager.SessionUtilManager;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
-import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
-import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
-import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.mgt.SubjectFactory;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.filter.authc.AnonymousFilter;
-import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 
 /**
@@ -50,8 +43,8 @@ public class ShiroConfig {
 	 */
 	@Bean
     public SessionManager sessionManager(){  
-		CustomSessionManager customSessionManager=new CustomSessionManager();
-	    return customSessionManager;
+		SessionUtilManager sessionUtilManager=new SessionUtilManager();
+	    return sessionUtilManager;
     }
 
 
@@ -68,8 +61,7 @@ public class ShiroConfig {
 	public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
 		ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
 		shiroFilter.setSecurityManager(securityManager);		
-      Map<String, Filter> filterMap = new HashMap<>();
-      filterMap.put("auth",new reqAuthenticationFilter());      
+      Map<String, Filter> filterMap = new HashMap<>();    
       shiroFilter.setFilters(filterMap);       
 		Map<String, String> map = new LinkedHashMap<>();		
 		map.put("/dologin", "anon");

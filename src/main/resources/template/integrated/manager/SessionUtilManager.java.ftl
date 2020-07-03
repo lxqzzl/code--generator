@@ -10,7 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 
-public class CustomSessionManager extends DefaultWebSessionManager {
+public class SessionUtilManager extends DefaultWebSessionManager {
 	
 	private static final String AUTHORIZATION = "Authorization";  
 	  
@@ -33,4 +33,3 @@ public class CustomSessionManager extends DefaultWebSessionManager {
         
     }
 }
-

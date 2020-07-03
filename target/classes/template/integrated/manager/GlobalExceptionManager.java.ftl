@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  
 @ControllerAdvice
 @ResponseBody
-public class GlobalExceptionHandler {
-	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+public class GlobalExceptionManager {
+	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionManager.class);
 	/**
 	* 全局异常
 	* @param ex UnauthorizedException
@@ -28,10 +28,10 @@ public class GlobalExceptionHandler {
 	*/
 	@ExceptionHandler(Exception.class)
     @ResponseBody
-    public GlobalResult globaldefaultExceptionHandler(
+    public GlobalErrorDTO globaldefaultExceptionHandler(
     	Exception ex){
 	    logger.error("发生错误，{}", ex.getMessage());
-        return new GlobalResult(500,  "发生错误", ex.getMessage());
+        return new GlobalErrorDTO(500,  "发生错误", ex.getMessage());
     }
 	
 	/**
@@ -40,10 +40,10 @@ public class GlobalExceptionHandler {
 	* @return
 	*/
 	@ExceptionHandler(MissingServletRequestParameterException.class)
-	public GlobalResult httpMessageNotReadableExceptionhandler(
+	public GlobalErrorDTO httpMessageNotReadableExceptionhandler(
 	    MissingServletRequestParameterException ex) {
 	    logger.error("缺少请求参数，{}", ex.getMessage());
-	    return new GlobalResult(554,  "缺少必要的请求参数", ex.getMessage());
+	    return new GlobalErrorDTO(554,  "缺少必要的请求参数", ex.getMessage());
 	}
 	
 	/**
@@ -52,10 +52,10 @@ public class GlobalExceptionHandler {
 	* @return
 	*/
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-	public GlobalResult httpRequestMethodNotSupportedException(
+	public GlobalErrorDTO httpRequestMethodNotSupportedException(
 	    HttpRequestMethodNotSupportedException ex) {
 	    logger.error("请求方式错误，{}", ex.getMessage());
-	    return new GlobalResult(405,  "请求方式错误", ex.getMessage());
+	    return new GlobalErrorDTO(405,  "请求方式错误", ex.getMessage());
 	}
 	
 	/**
@@ -65,10 +65,10 @@ public class GlobalExceptionHandler {
 	*/
 	@ExceptionHandler(NotFoundException.class)
     @ResponseBody
-    public GlobalResult missPathdefaultExceptionHandler(
+    public GlobalErrorDTO missPathdefaultExceptionHandler(
     	NotFoundException ex){
 	    logger.error("未找到，{}", ex.getMessage());
-        return new GlobalResult(404,  "未找到指定路径", ex.getMessage());
+        return new GlobalErrorDTO(404,  "未找到指定路径", ex.getMessage());
     }	
 	
 	/**
@@ -77,10 +77,10 @@ public class GlobalExceptionHandler {
 	* @return
 	*/
 	@ExceptionHandler(AuthorizationException.class)
-    public GlobalResult authorizationExceptionHandler(
+    public GlobalErrorDTO authorizationExceptionHandler(
     		AuthorizationException ex){
 	    logger.error("权限不够，{}", ex.getMessage());
-        return new GlobalResult(553,  "权限不够", ex.getMessage());
+        return new GlobalErrorDTO(553,  "权限不够", ex.getMessage());
     }
 	
 	/**
@@ -89,10 +89,10 @@ public class GlobalExceptionHandler {
 	* @return
 	*/
 	@ExceptionHandler(AuthenticationException.class)
-    public GlobalResult authenticationExceptionHandler(
+    public GlobalErrorDTO authenticationExceptionHandler(
     		AuthenticationException ex){
 	    logger.error("登录失败，{}", ex.getMessage());
-        return new GlobalResult(553,  "登录验证失败", ex.getMessage());
+        return new GlobalErrorDTO(553,  "登录验证失败", ex.getMessage());
     }
 	
 }

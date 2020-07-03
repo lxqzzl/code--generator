@@ -1,7 +1,7 @@
 package ${packageName}.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -13,8 +13,8 @@ import ${packageName}.web.GateWayHandlerInterceptor;
  * @since ${date}
  */
 
-@Component
-public class CorsConfig implements WebMvcConfigurer {
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
 	
 	@Autowired
 	GateWayHandlerInterceptor gatewayHandlerInterceptor;
@@ -31,6 +31,8 @@ public class CorsConfig implements WebMvcConfigurer {
     
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(gatewayHandlerInterceptor);
+        registry.addInterceptor(gatewayHandlerInterceptor).addPathPatterns("/**").excludePathPatterns("/login")
+				.excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**",
+						"/doc.html/**");
     }
 }

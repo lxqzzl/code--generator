@@ -61,7 +61,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 	}
 
 	@Override
-	public void mainCodeGenertor(Map<String, Object> dataBaseModel, String[] tableNames, String pre, String packageName,
+	public void mainCodeGenertor(Map<String, String> dataModel, String[] tableNames, String pre, 
 			String projectPath, String templatePath) {
 		AutoGenerator mpg = new AutoGenerator();
 		mpg.setTemplateEngine(new FreemarkerTemplateEngine());
@@ -90,10 +90,10 @@ public class GeneratorServiceImpl implements GeneratorService {
 		//数据源配置
 		DataSourceConfig dsc = new DataSourceConfig();
 		// 配置数据库类型
-		dsc.setDbType(DbType.MYSQL).setUrl(dataBaseModel.get("url").toString())
-				.setDriverName(dataBaseModel.get("driver").toString())
-				.setUsername(dataBaseModel.get("username").toString())
-				.setPassword(dataBaseModel.get("password").toString()).setTypeConvert(new MySqlTypeConvert() {
+		dsc.setDbType(DbType.MYSQL).setUrl(dataModel.get("url"))
+				.setDriverName(dataModel.get("driver"))
+				.setUsername(dataModel.get("username"))
+				.setPassword(dataModel.get("password")).setTypeConvert(new MySqlTypeConvert() {
 					@Override
 					public DbColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
 						// tinyint转换成Boolean
@@ -115,7 +115,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 		//包配置
 		PackageConfig pc = new PackageConfig();
 		// 配置父包路径
-		pc.setParent(packageName).setMapper("dao").setEntity("entity").setService("service").setController("controller")
+		pc.setParent(dataModel.get("packageName").toString()).setMapper("dao").setEntity("entity").setService("service").setController("controller")
 				.setServiceImpl("service.impl");
 
 		//自定义配置
@@ -123,7 +123,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 			@Override
 			public void initMap() {
 				Map<String, Object> map = new HashMap<>();
-				map.put("packageName", packageName);
+				map.put("packageName", dataModel.get("packageName").toString());
 				map.put("author", "lxq");
 				map.put("date", LocalDateTime.now().format(DATETIME_FORMATTER));
 				this.setMap(map);
@@ -158,11 +158,23 @@ public class GeneratorServiceImpl implements GeneratorService {
 	public void otherCodeGenertor(List<String> fileNames, Map<String, String> dataModel, String basePath,
 			String targetPath) throws IOException, TemplateException{
 		// 创建输出目录子目录
-		File childFiles = new File(targetPath + "/src/main/java"+ ManagerUtil.getPackagePath(dataModel.get("packageName"))+ "/" + basePath.substring(basePath.lastIndexOf("\\") + 1));
+		if(!basePath.contains("pom"))
+		{
+			targetPath = targetPath+ "/src/main/java"+ ManagerUtil.getPackagePath(dataModel.get("packageName")) + "/" + basePath.substring(basePath.lastIndexOf("\\") + 1);
+		}
+		if(basePath.contains("startapp")) {
+			targetPath = targetPath.replace("/src/main/java/com/demo/gtest/startapp", "")+ "/src/main/java"+ ManagerUtil.getPackagePath(dataModel.get("packageName"));
+		}
+		if(basePath.contains("appresources"))
+		{
+			targetPath = targetPath.replace("java/com/demo/gtest/appresources", "")+ "resources";
+		}
+		File childFiles = new File(targetPath);
 		// 如果子目录不存在
 		if (!childFiles.exists()) {
 		// 创建子目录
 			childFiles.mkdir();
+			System.out.println("生成对应文件夹："+targetPath);
 		}
 		// 创建一个Configuration对象，直接new一个对象。构造方法的参数就是freemarker对于的版本号。
 		Configuration configuration = new Configuration(Configuration.getVersion());
@@ -175,8 +187,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 			// 加载一个模板，创建一个模板对象。
 			Template template1 = configuration.getTemplate(fileName);
 			// 创建一个Writer对象，一般创建一FileWriter对象，指定生成的文件名
-			Writer out = new FileWriter(new File(targetPath+ "/src/main/java"+ ManagerUtil.getPackagePath(dataModel.get("packageName")) + "/" + basePath.substring(basePath.lastIndexOf("\\") + 1)
-					+ "/" + fileName.substring(0, fileName.length() - 4)));
+			Writer out = new FileWriter(new File(targetPath+ "/" + fileName.substring(0, fileName.length() - 4)));
 			// 调用模板对象的process方法输出文件。
 			template1.process(dataModel, out);
 			// 第八步：关闭流。

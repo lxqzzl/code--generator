@@ -1,14 +1,14 @@
-package ${packageName}.manager;
+package ${packageName}.entity;
 
 import lombok.Data;
 
 /**
- * @Description 自定义响应数据结构            
- * @author ${author}
- * @since ${date}
+ * @Description 全局错误返回数据结构            
+ * @author lxq
+ * @since Fri Jul 03 11:03:41 CST 2020
  */
 @Data
-public class GlobalResult {
+public class GlobalErrorDTO {
 	/**
 	 * 响应业务状态
 	 */
@@ -30,7 +30,7 @@ public class GlobalResult {
      * @param msg
      * @param data
      */
-    public GlobalResult(Integer status, String msg, Object data) {
+    public GlobalErrorDTO(Integer status, String msg, Object data) {
 		this.status=status;
 		this.msg=msg;
 		this.data=data;
