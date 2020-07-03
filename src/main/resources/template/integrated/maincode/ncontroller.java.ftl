@@ -126,7 +126,7 @@ public class ${table.controllerName} {
      */
 	@PostMapping("/")
 	@RequiresPermissions({ "${entity?replace("DO","")?lower_case}-r", "${entity?replace("DO","")?lower_case}-c"})
-	@ApiOperation(value = "添加数据",httpMethod = "POST",notes = "用于在${table.name}表中插入对应的一条数据，为异步方法，结果会回调到异步地址中\n;"
+	@ApiOperation(value = "添加数据",httpMethod = "POST",notes = "用于在${table.name}表中插入对应的数据，为异步方法，结果会回调到异步地址中\n;"
 			+ "${entity}实体类数据{\n"
 			<#list table.fields as field> 
 			<#if field.name?contains("spare")>
@@ -141,15 +141,17 @@ public class ${table.controllerName} {
 	        </#if>
 	        </#list>
 	        + "}\n")
-	@ApiImplicitParam(name = "data", value = "${table.entityPath}实体类数据", paramType = "body", dataType = "String")
+	@ApiImplicitParam(name = "data", value = "${table.entityPath}实体类数据列表", paramType = "body", dataType = "String")
 	@ApiResponses({ @ApiResponse(code = 551, message = "第三方平台错误"), @ApiResponse(code = 552, message = "本平台错误"),
 		@ApiResponse(code = 553, message = "权限不够"), @ApiResponse(code = 554, message = "请求数据有误"),
 		@ApiResponse(code = 555, message = "请求超时，请重试") })
 	public ${entity} insert${entity?replace("DO","")}(@RequestBody(required=true)String data) {
-		logger.info("receive:[data:"+data+"]");		
-		${entity} ${table.entityPath}=JSONObject.parseObject(data, ${entity}.class);	 
-		${table.serviceName?uncap_first}.insert${entity?replace("DO","")}(${table.entityPath});		
-		return ${table.entityPath};		
+		logger.info("receive:[data:"+data+"]");	
+		List<${entity}>  ${table.entityPath}s = JSONObject.parseArray(data, ${entity}.class);
+		for(${entity} ${table.entityPath}:${table.entityPath}s) {
+			${table.serviceName?uncap_first}.insert${entity?replace("DO","")}(${table.entityPath});
+		}			
+		return null;		
 	}
 
 	
@@ -184,9 +186,11 @@ public class ${table.controllerName} {
 		@ApiResponse(code = 555, message = "请求超时，请重试") })
 	public ${entity} update${entity}(@RequestBody(required=true)String data) {
 		logger.info("receive:[data:"+data+"]");
-		${entity} ${table.entityPath}=JSONObject.parseObject(data, ${entity}.class);	    
-		${table.entityPath} = ${table.serviceName?uncap_first}.update${entity?replace("DO","")}(${table.entityPath});		
-        return ${table.entityPath};
+		List<${entity}>  ${table.entityPath}s = JSONObject.parseArray(data, ${entity}.class);
+		for(${entity} ${table.entityPath}:${table.entityPath}s) {
+			${table.serviceName?uncap_first}.update${entity?replace("DO","")}(${table.entityPath});
+		}			
+		return null;
      }
 
     /**
