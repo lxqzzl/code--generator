@@ -164,7 +164,7 @@ public class ${table.serviceImplName} implements ${table.serviceName} {
 				//通过getMethod()方法获取${entity}对应的set方法
 				//通过invoke执行该方法并将值回传给${table.entityPath}
 				${table.entityPath} = (${entity}) new ${entity}().getClass().getMethod(
-						methodName, (fieldTypeMap.get(key))).invoke(${table.entityPath}, fieldJson.get(key));
+						methodName, (fieldTypeMap.get(key))).invoke(${table.entityPath}, fieldJson.getObject(key, fieldTypeMap.get(key)));
 			} catch (Exception e) {
 				//抛出异常
 				e.printStackTrace();

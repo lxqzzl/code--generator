@@ -70,7 +70,6 @@ public class GeneratorController {
 	
 	@PostMapping("/integrate")
 	public void generateIntegratedCode(
-			@RequestParam(value = "newProjectPath", required = false)String newProjectPath,
 			@RequestBody(required = true) String data) throws IOException, TemplateException {
 		JSONObject dataJson = JSONObject.parseObject(data);
     	String projectPath = System.getProperty("user.dir");	
